@@ -1,5 +1,5 @@
 window.__ENV__ = {
-  VITE_API_URL: 'https://todo.supermock.ru/api',
+  VITE_API_URL: 'https://api.todo.supermock.ru/api',
 };
 
 
