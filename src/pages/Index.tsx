@@ -10,6 +10,7 @@ import { TodoFilters } from '@/components/TodoFilters';
 import { TodoStats } from '@/components/TodoStats';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Onboarding } from '@/components/Onboarding';
+import { PushNotificationPrompt } from '@/components/PushNotificationPrompt';
 import { useTodoStore } from '@/store/todoStore';
 import { useAuthStore } from '@/store/authStore';
 import { useStatusStore } from '@/store/statusStore';
@@ -152,6 +153,7 @@ const Index = () => {
         </header>
 
         <Onboarding />
+        <PushNotificationPrompt />
 
         {todos.length > 0 && (
           <div className="mb-6">
