@@ -11,6 +11,7 @@ import { TodoStats } from '@/components/TodoStats';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Onboarding } from '@/components/Onboarding';
 import { PushNotificationPrompt } from '@/components/PushNotificationPrompt';
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 import { useTodoStore } from '@/store/todoStore';
 import { useAuthStore } from '@/store/authStore';
 import { useStatusStore } from '@/store/statusStore';
@@ -154,6 +155,7 @@ const Index = () => {
 
         <Onboarding />
         <PushNotificationPrompt />
+        <PWAInstallPrompt />
 
         {todos.length > 0 && (
           <div className="mb-6">
