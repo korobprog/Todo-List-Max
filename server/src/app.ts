@@ -34,6 +34,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
+// For environments where health checks are performed under the /api prefix
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/statuses', statusRoutes);
