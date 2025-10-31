@@ -20,10 +20,8 @@ export const TodoCategorySelector = ({ value, onChange, className }: TodoCategor
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  // Нормализуем value: пустая строка становится null
   const normalizedValue = value === '' ? null : value;
 
-  // Получаем все категории (из задач + пользовательские)
   const categoriesFromTodos = Array.from(
     new Set(todos.map((t) => t.category).filter((c): c is string => c !== null && c !== ''))
   );
@@ -32,9 +30,7 @@ export const TodoCategorySelector = ({ value, onChange, className }: TodoCategor
   const handleAddCategory = () => {
     if (newCategory.trim()) {
       const categoryName = newCategory.trim();
-      // Добавляем категорию в глобальное состояние
       addCustomCategory(categoryName);
-      // Устанавливаем выбранную категорию
       onChange(categoryName);
       setNewCategory('');
       setIsDialogOpen(false);
@@ -46,10 +42,8 @@ export const TodoCategorySelector = ({ value, onChange, className }: TodoCategor
       onChange(null);
       setIsSelectOpen(false);
     } else if (val === '__new__') {
-      // Открываем диалог при выборе "__new__"
       setIsDialogOpen(true);
       setIsSelectOpen(false);
-      // Не вызываем onChange, чтобы Select не оставался с этим значением
     } else {
       onChange(val);
       setIsSelectOpen(false);
@@ -89,7 +83,6 @@ export const TodoCategorySelector = ({ value, onChange, className }: TodoCategor
           </SelectItem>
           <SelectItem value="__none__">Без категории</SelectItem>
           {allCategories.map((category) => {
-            // Дополнительная проверка на пустую строку
             if (!category || category === '') return null;
             return (
               <SelectItem key={category} value={category}>

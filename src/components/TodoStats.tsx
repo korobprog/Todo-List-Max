@@ -11,7 +11,6 @@ export const TodoStats = () => {
   
   const progress = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
   
-  // Count todos by status
   const statusCounts = statuses.map((status) => ({
     ...status,
     count: todos.filter((todo) => todo.statusId === status.id).length,

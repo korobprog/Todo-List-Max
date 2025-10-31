@@ -59,7 +59,6 @@ const Index = () => {
       filtered = filtered.filter((todo) => todo.tags.includes(filterByTag));
     }
 
-    // Filter by status only in list view (board view already shows by status)
     if (viewMode === 'list' && filterByStatusId) {
       filtered = filtered.filter((todo) => todo.statusId === filterByStatusId);
     }
@@ -95,7 +94,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 py-8 px-4 transition-colors duration-300">
       <div className={viewMode === 'board' ? 'w-full mx-auto' : 'max-w-3xl mx-auto'}>
-        {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -147,22 +145,18 @@ const Index = () => {
           </div>
         </header>
 
-        {/* Onboarding */}
         <Onboarding />
 
-        {/* Stats */}
         {todos.length > 0 && (
           <div className="mb-6">
             <TodoStats />
           </div>
         )}
 
-        {/* Input */}
         <div className="mb-6">
           <TodoInput />
         </div>
 
-        {/* Filters */}
         {todos.length > 0 && viewMode === 'list' && (
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-foreground">
@@ -172,7 +166,6 @@ const Index = () => {
           </div>
         )}
 
-        {/* Todo List or Board */}
         {viewMode === 'board' ? (
           <div className="mb-4">
             <div className="flex justify-between items-center mb-4">

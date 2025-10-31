@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Pencil, Trash2, Check, X, Tag, Calendar, AlertCircle, Minus, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ interface TodoItemProps {
   hideStatusSelector?: boolean;
 }
 
-const priorityConfig: Record<Priority, { label: string; color: string; icon: JSX.Element }> = {
+const priorityConfig: Record<Priority, { label: string; color: string; icon: ReactNode }> = {
   low: {
     label: 'Низкий',
     color: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',

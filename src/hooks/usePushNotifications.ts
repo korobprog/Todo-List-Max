@@ -28,7 +28,6 @@ export function usePushNotifications() {
   useEffect(() => {
     const init = async () => {
       try {
-        // Синхронная проверка поддержки
         const supported = isPushSupported();
         if (!supported) {
           setState({
@@ -40,7 +39,6 @@ export function usePushNotifications() {
           return;
         }
 
-        // Проверяем, что Service Worker зарегистрирован
         if (!('serviceWorker' in navigator)) {
           setState({
             isSupported: false,
@@ -53,7 +51,6 @@ export function usePushNotifications() {
 
         const permission = await checkPushPermission();
         
-        // Ждем готовности Service Worker
         let registration;
         try {
           registration = await navigator.serviceWorker.ready;
@@ -89,14 +86,12 @@ export function usePushNotifications() {
     try {
       setState((prev) => ({ ...prev, isLoading: true }));
 
-      // Проверяем поддержку (синхронно)
       const supported = isPushSupported();
       if (!supported) {
         toast.error('Ваш браузер не поддерживает push уведомления');
         return false;
       }
 
-      // Запрашиваем разрешение
       let permission = await checkPushPermission();
       if (permission === 'default') {
         permission = await requestPushPermission();
@@ -108,13 +103,10 @@ export function usePushNotifications() {
         return false;
       }
 
-      // Получаем VAPID ключ
       const publicKey = await getVapidPublicKey();
 
-      // Подписываемся
       const subscription = await subscribeToPush(publicKey);
 
-      // Отправляем на сервер
       await sendSubscriptionToServer(subscription);
 
       setState({

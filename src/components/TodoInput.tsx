@@ -28,6 +28,7 @@ export const TodoInput = () => {
           completed: false,
           priority,
           category,
+          statusId: null,
           tags,
           deadline,
         });

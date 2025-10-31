@@ -63,21 +63,18 @@ const Settings = () => {
       toast.success('Настройки обновлены');
     } catch (error: any) {
       toast.error(error.message || 'Ошибка обновления настроек');
-      // Откатываем изменения при ошибке
       setLocalSettings(localSettings);
     }
   };
 
   const handlePushToggle = async () => {
     await togglePush();
-    // Перезагружаем настройки после изменения подписки
     await loadNotificationSettings();
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 py-8 px-4 transition-colors duration-300">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
         <header className="flex items-center gap-4 mb-8">
           <Button
             variant="ghost"
@@ -102,7 +99,6 @@ const Settings = () => {
           </div>
         </header>
 
-        {/* Push Notifications Section */}
         <Card className="mb-6 rounded-2xl border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -152,7 +148,7 @@ const Settings = () => {
                   id="push-toggle"
                   checked={isSubscribed}
                   onCheckedChange={handlePushToggle}
-                  disabled={pushLoading || pushPermission === 'denied'}
+                  disabled={pushLoading || pushPermission !== 'granted'}
                 />
               </div>
             )}

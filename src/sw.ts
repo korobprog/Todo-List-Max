@@ -2,6 +2,7 @@
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { NetworkFirst, CacheFirst } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -9,23 +10,19 @@ cleanupOutdatedCaches();
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// Кеширование API запросов
 registerRoute(
   ({ url }) => url.pathname.startsWith('/api/'),
   new NetworkFirst({
     cacheName: 'api-cache',
     networkTimeoutSeconds: 10,
     plugins: [
-      {
-        cacheableResponse: {
-          statuses: [0, 200],
-        },
-      },
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
     ],
   })
 );
 
-// Кеширование изображений
 registerRoute(
   ({ request }) => request.destination === 'image',
   new CacheFirst({
@@ -64,7 +61,6 @@ self.addEventListener('push', (event: PushEvent) => {
       tag: notificationData.title,
       data: notificationData,
       requireInteraction: false,
-      vibrate: [200, 100, 200],
     })
   );
 });

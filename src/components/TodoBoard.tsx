@@ -188,7 +188,6 @@ export const TodoBoard = ({ todos }: TodoBoardProps) => {
           );
         })}
 
-        {/* Column for tasks without status - always show if there are tasks without status */}
         {(todosByStatus['no-status'] && todosByStatus['no-status'].length > 0) || todos.some(t => !t.statusId) ? (
           <DroppableColumn statusId="no-status">
             <motion.div
