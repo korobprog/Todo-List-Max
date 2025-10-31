@@ -12,14 +12,14 @@ export interface JwtPayload {
 }
 
 export const generateToken = (payload: JwtPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+  return jwt.sign(payload, JWT_SECRET as string, {
+    expiresIn: JWT_EXPIRES_IN as string,
   });
 };
 
 export const verifyToken = (token: string): JwtPayload => {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
     return decoded;
   } catch (error) {
     throw new Error('Invalid or expired token');
