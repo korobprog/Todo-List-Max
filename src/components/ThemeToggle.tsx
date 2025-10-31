@@ -19,12 +19,12 @@ export const ThemeToggle = () => {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="rounded-xl hover:bg-muted"
+      className="rounded-xl hover:bg-muted !border-2 border-muted-foreground/40 dark:!border-border dark:border-border text-foreground [&_svg]:stroke-foreground"
     >
       {theme === 'light' ? (
-        <Sun className="h-5 w-5" />
+        <Sun className="h-5 w-5 text-foreground stroke-foreground stroke-[2]" />
       ) : (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-5 w-5 text-foreground stroke-foreground stroke-[2]" />
       )}
     </Button>
   );

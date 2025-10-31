@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { motion } from 'framer-motion';
-import { Pencil, Trash2, Check, X } from 'lucide-react';
+import { Pencil, Trash2, Check, X, Tag, Calendar, AlertCircle, Minus, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useTodoStore, type Todo } from '@/store/todoStore';
+import { Badge } from '@/components/ui/badge';
+import { useTodoStore, type Todo, type Priority } from '@/store/todoStore';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
+import { TodoStatusSelector } from './TodoStatusSelector';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,17 +23,40 @@ import {
 
 interface TodoItemProps {
   todo: Todo;
+  hideStatusSelector?: boolean;
 }
 
-export const TodoItem = ({ todo }: TodoItemProps) => {
+const priorityConfig: Record<Priority, { label: string; color: string; icon: JSX.Element }> = {
+  low: {
+    label: 'Низкий',
+    color: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',
+    icon: <Minus className="h-3 w-3" />,
+  },
+  medium: {
+    label: 'Средний',
+    color: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20',
+    icon: <AlertCircle className="h-3 w-3" />,
+  },
+  high: {
+    label: 'Высокий',
+    color: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+    icon: <ArrowUp className="h-3 w-3" />,
+  },
+};
+
+export const TodoItem = forwardRef<HTMLDivElement, TodoItemProps>(({ todo, hideStatusSelector = false }, ref) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
   const { toggleTodo, deleteTodo, editTodo } = useTodoStore();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editText.trim()) {
-      editTodo(todo.id, editText);
-      setIsEditing(false);
+      try {
+        await editTodo(todo.id, { text: editText });
+        setIsEditing(false);
+      } catch (error: any) {
+        console.error('Error updating todo:', error);
+      }
     }
   };
 
@@ -38,8 +65,12 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
     setIsEditing(false);
   };
 
+  const priorityConf = priorityConfig[todo.priority];
+  const isOverdue = todo.deadline && !todo.completed && todo.deadline < Date.now();
+
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -50,7 +81,13 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
       <div className="flex items-center gap-3">
         <Checkbox
           checked={todo.completed}
-          onCheckedChange={() => toggleTodo(todo.id)}
+          onCheckedChange={async () => {
+            try {
+              await toggleTodo(todo.id);
+            } catch (error: any) {
+              console.error('Error toggling todo:', error);
+            }
+          }}
           className="h-5 w-5 rounded-lg data-[state=checked]:bg-primary data-[state=checked]:border-primary"
         />
 
@@ -85,15 +122,49 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           </div>
         ) : (
           <>
-            <p
-              className={`flex-1 text-base transition-all ${
-                todo.completed
-                  ? 'line-through text-muted-foreground'
-                  : 'text-foreground'
-              }`}
-            >
-              {todo.text}
-            </p>
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-2">
+                <p
+                  className={`text-base transition-all ${
+                    todo.completed
+                      ? 'line-through text-muted-foreground'
+                      : 'text-foreground'
+                  }`}
+                >
+                  {todo.text}
+                </p>
+                <Badge variant="outline" className={priorityConf.color}>
+                  {priorityConf.icon}
+                </Badge>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                {!hideStatusSelector && (
+                  <TodoStatusSelector todoId={todo.id} currentStatusId={todo.statusId} />
+                )}
+                {todo.category && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Tag className="h-3 w-3 mr-1" />
+                    {todo.category}
+                  </Badge>
+                )}
+                {todo.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {todo.tags.map((tag, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                {todo.deadline && (
+                  <div className={`flex items-center gap-1 ${isOverdue ? 'text-destructive font-semibold' : ''}`}>
+                    <Calendar className="h-3 w-3" />
+                    <span>{format(new Date(todo.deadline), 'd MMM yyyy', { locale: ru })}</span>
+                    {isOverdue && <span className="text-xs">(Просрочено)</span>}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
@@ -125,7 +196,13 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
                   <AlertDialogFooter>
                     <AlertDialogCancel className="rounded-xl">Отмена</AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={() => deleteTodo(todo.id)}
+                      onClick={async () => {
+                        try {
+                          await deleteTodo(todo.id);
+                        } catch (error: any) {
+                          console.error('Error deleting todo:', error);
+                        }
+                      }}
                       className="rounded-xl bg-destructive hover:bg-destructive/90"
                     >
                       Удалить
@@ -139,4 +216,6 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
       </div>
     </motion.div>
   );
-};
+});
+
+TodoItem.displayName = 'TodoItem';

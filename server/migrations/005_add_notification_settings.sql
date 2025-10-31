@@ -1,0 +1,15 @@
+-- Create user_notification_settings table
+CREATE TABLE IF NOT EXISTS user_notification_settings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL UNIQUE,
+  pushEnabled BOOLEAN DEFAULT TRUE,
+  newTodoEnabled BOOLEAN DEFAULT TRUE,
+  deadlineEnabled BOOLEAN DEFAULT TRUE,
+  completedEnabled BOOLEAN DEFAULT FALSE,
+  updatedEnabled BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_userId (userId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

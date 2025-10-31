@@ -1,73 +1,102 @@
-# Welcome to your Lovable project
+📝 Добавление/редактирование/удаление задач с анимациями
+✅ Чекбоксы для отметки выполнения
+🎨 Фильтры: все/активные/выполненные
+🔄 Сортировка по дате, алфавиту, приоритету и дедлайну
+📊 Progress bar и статистика выполнения
+🌓 Темная тема с переключателем
+🔐 Авторизация через email и пароль
+📦 Хранение данных в MySQL базе данных
+🎯 Приоритеты задач (низкий, средний, высокий)
+📂 Категории задач
+🏷️ Теги для задач
+⏰ Дедлайны с уведомлениями о просрочке
+📋 Пользовательские статусы задач (Trello-style)
+👋 Приветствие для новых пользователей
+🎭 Плавные анимации Framer Motion
+📱 Адаптивный дизайн
+🔔 Push уведомления для важных событий
+📱 PWA поддержка - работа офлайн
+⚙️ Настройки уведомлений с гибкими переключателями
 
-## Project info
+## Настройка
 
-**URL**: https://lovable.dev/projects/c392951a-b5fe-486a-8691-445edb72fee8
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/c392951a-b5fe-486a-8691-445edb72fee8) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Фронтенд
+Создайте файл `.env` в корне проекта:
+```
+VITE_API_URL=http://localhost:3001/api
 ```
 
-**Edit a file directly in GitHub**
+### Бекенд
+Создайте файл `.env` в директории `server`:
+```
+PORT=3001
+NODE_ENV=development
+DATABASE_URL=mysql://tudolistuser:Krishna1284Radha@testtodo-todolist-ssach9:3306/tudolist
+JWT_SECRET=your-secret-key-change-this-in-production
+JWT_EXPIRES_IN=7d
+FRONTEND_URL=http://localhost:8080
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# VAPID ключи для Push уведомлений (сгенерируйте через: npx web-push generate-vapid-keys)
+VAPID_PUBLIC_KEY=ваш_публичный_ключ
+VAPID_PRIVATE_KEY=ваш_приватный_ключ
+VAPID_SUBJECT=mailto:your-email@example.com
+```
 
-**Use GitHub Codespaces**
+### Запуск
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Установите зависимости:
+   ```bash
+   npm install
+   cd server && npm install
+   ```
 
-## What technologies are used for this project?
+2. Выполните миграции БД:
+   ```bash
+   cd server && npm run migrate
+   ```
+   
+   Если миграции уже были выполнены ранее, выполните только новые:
+   ```bash
+   cd server && npx ts-node src/migrations/runNewMigrations.ts
+   ```
 
-This project is built with:
+3. Сгенерируйте VAPID ключи для Push уведомлений (опционально):
+   ```bash
+   cd server && npx web-push generate-vapid-keys
+   ```
+   Добавьте полученные ключи в `server/.env`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. Запустите бекенд:
+   ```bash
+   cd server && npm run dev
+   ```
 
-## How can I deploy this project?
+5. Запустите фронтенд:
+   ```bash
+   npm run dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/c392951a-b5fe-486a-8691-445edb72fee8) and click on Share -> Publish.
+## Особенности
 
-## Can I connect a custom domain to my Lovable project?
+### PWA (Progressive Web App)
+Приложение поддерживает работу в офлайн режиме благодаря Service Worker:
+- Кеширование статических ресурсов и API запросов
+- Установка как нативное приложение
+- Автоматическое обновление в фоне
 
-Yes, you can!
+### Push уведомления
+Получайте уведомления о важных событиях:
+- 📝 Новые задачи
+- ✅ Завершенные задачи (если включено)
+- 🔄 Обновления задач
+- ⏰ Приближающиеся дедлайны
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Настройки уведомлений доступны в разделе "Настройки" в меню пользователя.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Работа офлайн
+Приложение работает без интернета:
+- Просмотр кешированных задач
+- Создание новых задач (синхронизируются при восстановлении сети)
+- API запросы используют стратегию NetworkFirst с fallback на кеш
+
+Разрабочик - Коробков Максим Викторович

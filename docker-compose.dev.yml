@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: todo-mysql-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tudolist
+      MYSQL_USER: tudolistuser
+      MYSQL_PASSWORD: Krishna1284Radha
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - todo-network
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: todo-backend-dev
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - DATABASE_URL=mysql://tudolistuser:Krishna1284Radha@mysql:3306/tudolist
+      - JWT_SECRET=todo-app-secret-key-dev
+      - JWT_EXPIRES_IN=7d
+      - FRONTEND_URL=http://localhost:8085
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./server/src:/app/src
+      - ./server/migrations:/app/migrations
+    networks:
+      - todo-network
+    command: npm run dev
+
+networks:
+  todo-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
