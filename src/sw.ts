@@ -85,6 +85,12 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
   );
 });
 
-self.skipWaiting();
-self.clients.claim();
+// Ensure proper lifecycle: claim clients only after activation
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event: ExtendableEvent) => {
+  event.waitUntil(self.clients.claim());
+});
 
