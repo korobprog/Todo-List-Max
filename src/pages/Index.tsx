@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import type { Todo, Priority } from '@/store/todoStore';
 import { AnimatePresence } from 'framer-motion';
-import { CheckSquare, LogOut, Settings } from 'lucide-react';
+import { CheckSquare, LogOut, Settings, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { TodoInput } from '@/components/TodoInput';
 import { TodoItem } from '@/components/TodoItem';
@@ -134,6 +134,12 @@ const Index = () => {
                   <Link to="/settings" className="flex items-center w-full">
                     <Settings className="h-4 w-4 mr-2" />
                     Настройки
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/support" className="flex items-center w-full">
+                    <HelpCircle className="h-4 w-4 mr-2" />
+                    Поддержка
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={logout} className="text-destructive">

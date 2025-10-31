@@ -47,8 +47,15 @@ export const TodoBoard = ({ todos }: TodoBoardProps) => {
   const updateTodoStatus = useTodoStore((state) => state.updateTodoStatus);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  // Create sensors for drag and drop - simplified to avoid React 19 compatibility issues
-  const sensors = useSensors(useSensor(PointerSensor));
+  // Create sensors for drag and drop with a small activation threshold
+  // This prevents accidental drags when clicking buttons inside a card
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // start dragging only after pointer moves a bit
+      },
+    })
+  );
 
   // Group todos by status
   const todosByStatus = useMemo(() => {
