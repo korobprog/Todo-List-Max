@@ -18,7 +18,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 app.use(cors({
   origin: (origin, callback) => {
     // Разрешаем запросы с localhost на любом порту для разработки
-    if (!origin || origin.startsWith('http://localhost:') || origin === FRONTEND_URL) {
+    if (!origin || origin.startsWith('http://localhost:') || origin === FRONTEND_URL || origin === 'https://todo.supermock.ru') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
