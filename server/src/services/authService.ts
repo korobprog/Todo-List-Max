@@ -17,21 +17,21 @@ export const createUser = async (userData: CreateUserData): Promise<User> => {
   // Initialize default statuses for new user
   await initializeDefaultStatuses(insertId);
 
-  const [users] = await pool.execute<User[]>(
+  const [users] = await pool.execute<any[]>(
     'SELECT * FROM users WHERE id = ?',
     [insertId]
   );
 
-  return users[0];
+  return users[0] as User;
 };
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
-  const [users] = await pool.execute<User[]>(
+  const [users] = await pool.execute<any[]>(
     'SELECT * FROM users WHERE email = ?',
     [email]
   );
 
-  return users[0] || null;
+  return (users[0] as User) || null;
 };
 
 export const verifyPassword = async (password: string, hashedPassword: string): Promise<boolean> => {
@@ -69,11 +69,11 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const getUserById = async (id: number): Promise<User | null> => {
-  const [users] = await pool.execute<User[]>(
+  const [users] = await pool.execute<any[]>(
     'SELECT * FROM users WHERE id = ?',
     [id]
   );
 
-  return users[0] || null;
+  return (users[0] as User) || null;
 };
 
