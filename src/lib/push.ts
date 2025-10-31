@@ -1,4 +1,9 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const RUNTIME_API_URL = (typeof window !== 'undefined' && window.__ENV__?.VITE_API_URL) || undefined;
+const API_BASE_URL = (
+  RUNTIME_API_URL ||
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:3001/api' : '/api')
+).replace(/\/+$/, '');
 
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);

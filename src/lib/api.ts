@@ -1,4 +1,14 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Resolve API base URL in this order:
+// 1) Runtime env injected to window.__ENV__ (for static deployments)
+// 2) Build-time Vite env
+// 3) Dev fallback to localhost
+// 4) Prod fallback to relative /api
+const RUNTIME_API_URL = (typeof window !== 'undefined' && window.__ENV__?.VITE_API_URL) || undefined;
+const API_BASE_URL = (
+  RUNTIME_API_URL ||
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:3001/api' : '/api')
+).replace(/\/+$/, '');
 
 class ApiError extends Error {
   constructor(public status: number, message: string, public details?: any) {
